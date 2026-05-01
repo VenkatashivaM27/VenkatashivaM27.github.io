@@ -81,6 +81,14 @@
     .theme-toggle span { position:absolute; top:4px; left:4px; display:grid; place-items:center; width:28px; height:28px; border-radius:999px; background:#67e8f9; color:#050816; transition:transform .25s ease, background .25s ease; }
     .light-mode .theme-toggle { border-color:rgba(15,23,42,.14); background:rgba(255,255,255,.72); }
     .light-mode .theme-toggle span { transform:translateX(30px); background:#f59e0b; }
+    .admin-shell { position:fixed; right:18px; bottom:18px; z-index:80; }
+    .admin-panel { position:fixed; inset:76px 18px 18px auto; z-index:79; width:min(560px, calc(100vw - 36px)); overflow:auto; border-radius:24px; }
+    .admin-panel textarea { min-height:132px; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size:12px; }
+    .admin-field { display:block; margin-top:14px; }
+    .admin-field span { display:block; margin-bottom:7px; font-size:12px; font-weight:800; color:#67e8f9; text-transform:uppercase; letter-spacing:.12em; }
+    .admin-field input, .admin-field textarea { width:100%; border-radius:16px; border:1px solid rgba(255,255,255,.14); background:rgba(255,255,255,.09); color:white; padding:12px 14px; outline:none; }
+    .light-mode .admin-field span { color:#0369a1 !important; }
+    .light-mode .admin-field input, .light-mode .admin-field textarea { color:#0f172a !important; background:rgba(255,255,255,.78) !important; border-color:rgba(15,23,42,.14) !important; }
     @keyframes gridDrift { from { background-position:0 0; } to { background-position:0 108px; } }
     @keyframes circuitFlow { 0%,100% { opacity:.25; filter:hue-rotate(0deg); } 50% { opacity:1; filter:hue-rotate(80deg); } }
     @keyframes roboFloat { 0%,100% { border-radius:38% 62% 45% 55%; } 50% { border-radius:55% 45% 58% 42%; } }
@@ -96,7 +104,7 @@
     const { useEffect, useMemo, useRef, useState } = React;
 
     const resumeUrl = 'https://drive.google.com/file/d/1EDuxHBcz8WwaE-lCXEJfTrZc0AbUD0g_/view?usp=drivesdk';
-    const navLinks = ['About', 'Skills', 'Projects', 'Education', 'Certifications', 'Contact'];
+    const navLinks = ['About', 'Skills', 'Projects', 'Education', 'Certifications', 'Achievements', 'Contact'];
     const typingRoles = ['Full Stack Developer', 'Java Developer', 'Backend Developer', 'Web Developer'];
 
     const iconMap = {
@@ -150,6 +158,30 @@
         verification: 'https://www.linkedin.com/posts/venkatashiva%7Em_python-aicte-oasisinfobyte-activity-7377018971994251265-snJl?utm_source=share&utm_medium=member_desktop&rcm=ACoAAEjGFWEBZHFjk9c_3usb_qoKfvG2rL6tAv4'
       }
     ];
+
+    const defaultPortfolioData = {
+      resumeUrl,
+      profilePicture: 'https://www.image2url.com/r2/default/images/1777573685397-89c67374-55e9-453d-8b49-6a34a6cc2e5a.jpeg',
+      skills,
+      projects,
+      certifications,
+      achievements: [
+        {
+          title: 'Open for opportunities',
+          description: 'Ready to contribute to full stack development roles, internships, and product-focused engineering teams.',
+          date: '2026'
+        }
+      ]
+    };
+
+    function loadPortfolioData() {
+      try {
+        const saved = localStorage.getItem('venkatashivam_portfolio_data');
+        return saved ? { ...defaultPortfolioData, ...JSON.parse(saved) } : defaultPortfolioData;
+      } catch {
+        return defaultPortfolioData;
+      }
+    }
 
     function MailIcon() { return <svg viewBox="0 0 24 24" fill="none" className="h-5 w-5"><path d="M4 6h16v12H4V6Z" stroke="currentColor" strokeWidth="1.8"/><path d="m4 7 8 6 8-6" stroke="currentColor" strokeWidth="1.8"/></svg>; }
     function LinkedInIcon() { return <svg viewBox="0 0 24 24" fill="currentColor" className="h-5 w-5"><path d="M6.94 8.9H3.75v10.36h3.19V8.9ZM5.35 4.74a1.85 1.85 0 1 0 0 3.7 1.85 1.85 0 0 0 0-3.7Zm14.9 8.55c0-2.78-1.49-4.07-3.48-4.07a3 3 0 0 0-2.72 1.5V8.9h-3.06v10.36h3.18v-5.13c0-1.35.26-2.65 1.92-2.65 1.64 0 1.66 1.53 1.66 2.74v5.04h3.19v-5.97h-.69Z"/></svg>; }
@@ -262,14 +294,136 @@
       );
     }
 
+    function AdminPanel({ data, onSave }) {
+      const [open, setOpen] = useState(false);
+      const [loggedIn, setLoggedIn] = useState(sessionStorage.getItem('venkatashivam_admin') === 'true');
+      const [password, setPassword] = useState('');
+      const [message, setMessage] = useState('');
+      const [draft, setDraft] = useState({
+        resumeUrl: data.resumeUrl,
+        profilePicture: data.profilePicture,
+        skills: JSON.stringify(data.skills, null, 2),
+        projects: JSON.stringify(data.projects, null, 2),
+        achievements: JSON.stringify(data.achievements || [], null, 2),
+        certifications: JSON.stringify(data.certifications, null, 2)
+      });
+
+      useEffect(() => {
+        setDraft({
+          resumeUrl: data.resumeUrl,
+          profilePicture: data.profilePicture,
+          skills: JSON.stringify(data.skills, null, 2),
+          projects: JSON.stringify(data.projects, null, 2),
+          achievements: JSON.stringify(data.achievements || [], null, 2),
+          certifications: JSON.stringify(data.certifications, null, 2)
+        });
+      }, [data]);
+
+      const login = (event) => {
+        event.preventDefault();
+        if (password === 'venkatashiva27') {
+          sessionStorage.setItem('venkatashivam_admin', 'true');
+          setLoggedIn(true);
+          setMessage('Admin unlocked.');
+        } else {
+          setMessage('Wrong password.');
+        }
+      };
+
+      const save = () => {
+        try {
+          const nextData = {
+            resumeUrl: draft.resumeUrl.trim(),
+            profilePicture: draft.profilePicture.trim(),
+            skills: JSON.parse(draft.skills),
+            projects: JSON.parse(draft.projects),
+            achievements: JSON.parse(draft.achievements),
+            certifications: JSON.parse(draft.certifications)
+          };
+          localStorage.setItem('venkatashivam_portfolio_data', JSON.stringify(nextData));
+          onSave(nextData);
+          setMessage('Saved in this browser. To make it public for everyone, push the exported data/code to GitHub.');
+        } catch (error) {
+          setMessage(`Fix JSON before saving: ${error.message}`);
+        }
+      };
+
+      const reset = () => {
+        localStorage.removeItem('venkatashivam_portfolio_data');
+        onSave(defaultPortfolioData);
+        setMessage('Reset to the original portfolio data.');
+      };
+
+      const exportData = () => {
+        const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = 'portfolio-data.json';
+        link.click();
+        URL.revokeObjectURL(url);
+      };
+
+      return (
+        <>
+          <div className="admin-shell">
+            <button type="button" onClick={() => setOpen((value) => !value)} className="rounded-full bg-gradient-to-r from-cyan-300 to-fuchsia-400 px-5 py-3 text-sm font-black text-ink shadow-glow transition hover:scale-105">
+              Admin
+            </button>
+          </div>
+          {open && (
+            <aside className="admin-panel glass p-5 text-slate-200">
+              <div className="flex items-start justify-between gap-4">
+                <div>
+                  <h3 className="text-2xl font-black text-white">Admin Editor</h3>
+                  <p className="mt-2 text-sm text-slate-300">Static-site editor. Saves locally in this browser.</p>
+                </div>
+                <button type="button" onClick={() => setOpen(false)} className="rounded-full border border-white/15 bg-white/10 px-3 py-2 text-sm">Close</button>
+              </div>
+
+              {!loggedIn ? (
+                <form onSubmit={login} className="mt-5">
+                  <label className="admin-field"><span>Password</span><input type="password" value={password} onChange={(event) => setPassword(event.target.value)} placeholder="Enter admin password" /></label>
+                  <button type="submit" className="mt-4 w-full rounded-full bg-gradient-to-r from-cyan-300 to-emerald-300 px-5 py-3 font-black text-ink">Login</button>
+                </form>
+              ) : (
+                <div className="mt-4">
+                  <label className="admin-field"><span>Resume URL</span><input value={draft.resumeUrl} onChange={(event) => setDraft({ ...draft, resumeUrl: event.target.value })} /></label>
+                  <label className="admin-field"><span>Profile Picture URL</span><input value={draft.profilePicture} onChange={(event) => setDraft({ ...draft, profilePicture: event.target.value })} /></label>
+                  <label className="admin-field"><span>Skills JSON</span><textarea value={draft.skills} onChange={(event) => setDraft({ ...draft, skills: event.target.value })}></textarea></label>
+                  <label className="admin-field"><span>Projects JSON</span><textarea value={draft.projects} onChange={(event) => setDraft({ ...draft, projects: event.target.value })}></textarea></label>
+                  <label className="admin-field"><span>Achievements JSON</span><textarea value={draft.achievements} onChange={(event) => setDraft({ ...draft, achievements: event.target.value })}></textarea></label>
+                  <label className="admin-field"><span>Certifications JSON</span><textarea value={draft.certifications} onChange={(event) => setDraft({ ...draft, certifications: event.target.value })}></textarea></label>
+                  <div className="mt-5 grid gap-3 sm:grid-cols-3">
+                    <button type="button" onClick={save} className="rounded-full bg-gradient-to-r from-cyan-300 to-emerald-300 px-4 py-3 font-black text-ink">Save</button>
+                    <button type="button" onClick={exportData} className="rounded-full border border-white/15 bg-white/10 px-4 py-3 font-bold">Export</button>
+                    <button type="button" onClick={reset} className="rounded-full border border-white/15 bg-white/10 px-4 py-3 font-bold">Reset</button>
+                  </div>
+                </div>
+              )}
+              {message && <p className="mt-4 rounded-2xl bg-white/10 p-3 text-sm text-slate-200">{message}</p>}
+              <p className="mt-4 text-xs leading-6 text-slate-400">Password: venkatashiva27. This is not secure authentication because GitHub Pages has no backend. Use it for editing and previewing only.</p>
+            </aside>
+          )}
+        </>
+      );
+    }
+
     function App() {
       const typedText = useTyping(typingRoles);
       const [menuOpen, setMenuOpen] = useState(false);
       const [projectFilter, setProjectFilter] = useState('All');
       const [sent, setSent] = useState(false);
       const [lightMode, setLightMode] = useState(false);
-      const projectCategories = useMemo(() => ['All', ...new Set(projects.map((project) => project.category))], []);
-      const filteredProjects = projects.filter((project) => projectFilter === 'All' || project.category === projectFilter);
+      const [portfolioData, setPortfolioData] = useState(loadPortfolioData);
+      const activeSkills = portfolioData.skills || skills;
+      const activeProjects = portfolioData.projects || projects;
+      const activeCertifications = portfolioData.certifications || certifications;
+      const activeAchievements = portfolioData.achievements || [];
+      const activeResumeUrl = portfolioData.resumeUrl || resumeUrl;
+      const activeProfilePicture = portfolioData.profilePicture || defaultPortfolioData.profilePicture;
+      const projectCategories = useMemo(() => ['All', ...new Set(activeProjects.map((project) => project.category))], [activeProjects]);
+      const filteredProjects = activeProjects.filter((project) => projectFilter === 'All' || project.category === projectFilter);
 
       const handleContact = (event) => {
         event.preventDefault();
@@ -286,36 +440,39 @@
         <main id="top" className={`min-h-screen bg-ink text-white selection:bg-cyan-400/30 ${lightMode ? 'light-mode' : ''}`}>
           <Developer3DBackground />
           <Cursor3D />
+          <AdminPanel data={portfolioData} onSave={setPortfolioData} />
           <nav className="fixed left-0 right-0 top-0 z-50 border-b border-white/10 bg-ink/75 backdrop-blur-2xl">
             <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6 lg:px-8">
               <a href="#top" aria-label="TAP Academy home" className="group inline-flex items-center"><img src="https://tapportfolio.lovable.app/assets/logo-CxDGoOCE.png" alt="TAP Academy" className="h-10 w-auto transition duration-300 group-hover:drop-shadow-[0_0_18px_rgba(34,211,238,.65)]" /></a>
               <div className="hidden items-center gap-7 lg:flex">{navLinks.map((link) => <a key={link} href={`#${link.toLowerCase()}`} className="text-sm text-slate-300 transition hover:text-cyan-300">{link}</a>)}</div>
               <div className="hidden items-center gap-3 lg:flex">
                 <button type="button" onClick={() => setLightMode((value) => !value)} className="theme-toggle" aria-label="Toggle light and dark mode" title={lightMode ? 'Switch to dark mode' : 'Switch to light mode'}><span>{lightMode ? '☀' : '☾'}</span></button>
-                <a href={resumeUrl} target="_blank" rel="noreferrer" className="rounded-full bg-gradient-to-r from-cyan-400 to-fuchsia-500 px-5 py-2.5 text-sm font-semibold text-ink shadow-glow transition hover:scale-105 hover:shadow-pinkglow">Download Resume</a>
+                <a href={activeResumeUrl} target="_blank" rel="noreferrer" className="rounded-full bg-gradient-to-r from-cyan-400 to-fuchsia-500 px-5 py-2.5 text-sm font-semibold text-ink shadow-glow transition hover:scale-105 hover:shadow-pinkglow">Download Resume</a>
               </div>
               <button type="button" onClick={() => setMenuOpen((value) => !value)} className="glass inline-flex h-10 w-10 items-center justify-center rounded-full lg:hidden" aria-label="Toggle menu"><span className="text-xl">{menuOpen ? 'x' : '☰'}</span></button>
             </div>
-            {menuOpen && <div className="border-t border-white/10 bg-ink/95 px-4 py-5 lg:hidden"><div className="mx-auto flex max-w-7xl flex-col gap-4">{navLinks.map((link) => <a key={link} href={`#${link.toLowerCase()}`} onClick={() => setMenuOpen(false)} className="text-sm text-slate-200">{link}</a>)}<button type="button" onClick={() => setLightMode((value) => !value)} className="theme-toggle" aria-label="Toggle light and dark mode"><span>{lightMode ? '☀' : '☾'}</span></button><a href={resumeUrl} target="_blank" rel="noreferrer" className="rounded-full bg-gradient-to-r from-cyan-400 to-fuchsia-500 px-5 py-3 text-center text-sm font-semibold text-ink">Download Resume</a></div></div>}
+            {menuOpen && <div className="border-t border-white/10 bg-ink/95 px-4 py-5 lg:hidden"><div className="mx-auto flex max-w-7xl flex-col gap-4">{navLinks.map((link) => <a key={link} href={`#${link.toLowerCase()}`} onClick={() => setMenuOpen(false)} className="text-sm text-slate-200">{link}</a>)}<button type="button" onClick={() => setLightMode((value) => !value)} className="theme-toggle" aria-label="Toggle light and dark mode"><span>{lightMode ? '☀' : '☾'}</span></button><a href={activeResumeUrl} target="_blank" rel="noreferrer" className="rounded-full bg-gradient-to-r from-cyan-400 to-fuchsia-500 px-5 py-3 text-center text-sm font-semibold text-ink">Download Resume</a></div></div>}
           </nav>
 
           <section className="hero-grid relative isolate overflow-hidden px-4 pb-24 pt-32 sm:px-6 lg:px-8 lg:pt-40">
             <div className="absolute left-[-120px] top-20 h-72 w-72 rounded-full bg-cyan-500/30 blur-3xl"></div><div className="absolute bottom-20 right-[-100px] h-80 w-80 rounded-full bg-fuchsia-500/25 blur-3xl"></div><div className="absolute left-1/2 top-1/3 h-52 w-52 rounded-full bg-emerald-400/15 blur-3xl"></div>
             <div className="relative mx-auto grid max-w-7xl items-center gap-12 lg:grid-cols-[1.08fr_.92fr]">
               <Reveal><div className="max-w-3xl"><div className="mb-5 inline-flex rounded-full border border-cyan-300/30 bg-cyan-300/10 px-4 py-2 text-sm text-cyan-200 shadow-glow">Open for opportunities · Full Stack Development</div><h1 className="text-4xl font-black tracking-normal text-white sm:text-6xl lg:text-7xl">Venkata Shiva M</h1><div className="mt-5 min-h-12 text-2xl font-semibold text-slate-200 sm:text-3xl"><span className="bg-gradient-to-r from-cyan-300 via-emerald-300 to-fuchsia-300 bg-clip-text text-transparent">{typedText}</span><span className="ml-1 animate-pulse text-cyan-300">|</span></div><p className="mt-6 max-w-2xl text-lg leading-8 text-slate-300">Turning ideas into real-world web solutions with Java, Spring Boot, React, and clean product-minded engineering.</p><div className="mt-8 flex flex-wrap gap-4"><a href="#projects" className="rounded-full bg-white px-6 py-3 text-sm font-bold text-ink transition hover:scale-105 hover:bg-cyan-200">View Projects</a><a href="#contact" className="rounded-full border border-white/20 bg-white/10 px-6 py-3 text-sm font-bold text-white backdrop-blur transition hover:scale-105 hover:border-cyan-300/60 hover:text-cyan-200">Contact Me</a></div><div className="mt-9 grid max-w-xl grid-cols-1 gap-3 text-sm text-slate-300 sm:grid-cols-3">{['Bangaluru, India', 'Experience: N/A', 'Full Stack Developer'].map((item) => <Tilt key={item} className="glass rounded-2xl px-4 py-3">{item}</Tilt>)}</div></div></Reveal>
-              <Reveal className="flex justify-center lg:justify-end"><div className="relative"><div className="absolute inset-0 rounded-[2.5rem] bg-gradient-to-br from-cyan-400 via-emerald-300 to-fuchsia-500 blur-2xl" style={{ animation: 'glowPulse 4s ease-in-out infinite' }}></div><Tilt className="glass relative rounded-[2.5rem] p-4" style={{ animation: 'float 6s ease-in-out infinite' }}><div className="lift-3d relative overflow-hidden rounded-[2rem]"><img src="https://www.image2url.com/r2/default/images/1777573685397-89c67374-55e9-453d-8b49-6a34a6cc2e5a.jpeg" alt="Venkata Shiva M profile picture" className="h-[360px] w-[300px] rounded-[2rem] object-cover sm:h-[460px] sm:w-[380px]" /><div className="absolute inset-0 rounded-[2rem] bg-gradient-to-tr from-cyan-300/20 via-transparent to-fuchsia-400/20"></div></div></Tilt></div></Reveal>
+              <Reveal className="flex justify-center lg:justify-end"><div className="relative"><div className="absolute inset-0 rounded-[2.5rem] bg-gradient-to-br from-cyan-400 via-emerald-300 to-fuchsia-500 blur-2xl" style={{ animation: 'glowPulse 4s ease-in-out infinite' }}></div><Tilt className="glass relative rounded-[2.5rem] p-4" style={{ animation: 'float 6s ease-in-out infinite' }}><div className="lift-3d relative overflow-hidden rounded-[2rem]"><img src={activeProfilePicture} alt="Venkata Shiva M profile picture" className="h-[360px] w-[300px] rounded-[2rem] object-cover sm:h-[460px] sm:w-[380px]" /><div className="absolute inset-0 rounded-[2rem] bg-gradient-to-tr from-cyan-300/20 via-transparent to-fuchsia-400/20"></div></div></Tilt></div></Reveal>
             </div>
           </section>
 
           <section id="about" className="px-4 py-20 sm:px-6 lg:px-8"><Reveal className="mx-auto max-w-7xl"><div className="grid gap-8 lg:grid-cols-[.85fr_1.15fr]"><div><p className="text-sm font-semibold uppercase tracking-[.24em] text-cyan-300">About</p><h2 className="mt-3 text-3xl font-black sm:text-5xl">Clean, scalable applications with purpose.</h2></div><Tilt className="glass rounded-3xl p-6 text-slate-300 sm:p-8"><p className="text-lg leading-8">Full Stack Developer skilled in Java, Spring Boot, and modern web technologies. I build clean, scalable applications and enjoy turning ideas into real-world solutions.</p><p className="mt-5 leading-8">I am a Full Stack Developer who focuses on building clean, scalable, and user-focused web applications. My core strength lies in Java and Spring Boot for backend development, combined with modern frontend technologies to create complete, end-to-end solutions.</p><p className="mt-5 leading-8">I have developed real-world projects like web applications and interactive tools, where I focused not just on functionality, but also on usability and performance. Through my internships in Python and web development, I gained hands-on experience working with real development workflows.</p><p className="mt-5 leading-8">Right now, I am looking for opportunities where I can contribute, grow, and build impactful products as a Full Stack Developer.</p></Tilt></div></Reveal></section>
 
-          <section id="skills" className="px-4 py-20 sm:px-6 lg:px-8"><Reveal className="mx-auto max-w-7xl"><div className="mb-10 flex flex-col justify-between gap-4 sm:flex-row sm:items-end"><div><p className="text-sm font-semibold uppercase tracking-[.24em] text-emerald-300">Skills</p><h2 className="mt-3 text-3xl font-black sm:text-5xl">Technical toolkit</h2></div><p className="max-w-xl text-slate-300">A practical stack for building complete web products, from REST APIs to responsive interfaces.</p></div><div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">{Object.entries(skills).map(([group, items]) => <Tilt key={group} className="glass rounded-3xl p-6"><h3 className="lift-3d text-xl font-bold">{group}</h3><div className="mt-5 flex flex-wrap gap-3">{items.map((skill) => <span key={skill} className="lift-3d inline-flex items-center gap-2 rounded-2xl border border-white/10 bg-white/10 px-3 py-2 text-sm text-slate-200 transition hover:border-cyan-300/60 hover:bg-cyan-300/10 hover:text-cyan-100"><SkillLogo name={skill} />{skill}</span>)}</div></Tilt>)}</div></Reveal></section>
+          <section id="skills" className="px-4 py-20 sm:px-6 lg:px-8"><Reveal className="mx-auto max-w-7xl"><div className="mb-10 flex flex-col justify-between gap-4 sm:flex-row sm:items-end"><div><p className="text-sm font-semibold uppercase tracking-[.24em] text-emerald-300">Skills</p><h2 className="mt-3 text-3xl font-black sm:text-5xl">Technical toolkit</h2></div><p className="max-w-xl text-slate-300">A practical stack for building complete web products, from REST APIs to responsive interfaces.</p></div><div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">{Object.entries(activeSkills).map(([group, items]) => <Tilt key={group} className="glass rounded-3xl p-6"><h3 className="lift-3d text-xl font-bold">{group}</h3><div className="mt-5 flex flex-wrap gap-3">{items.map((skill) => <span key={skill} className="lift-3d inline-flex items-center gap-2 rounded-2xl border border-white/10 bg-white/10 px-3 py-2 text-sm text-slate-200 transition hover:border-cyan-300/60 hover:bg-cyan-300/10 hover:text-cyan-100"><SkillLogo name={skill} />{skill}</span>)}</div></Tilt>)}</div></Reveal></section>
 
           <section id="projects" className="px-4 py-20 sm:px-6 lg:px-8"><Reveal className="mx-auto max-w-7xl"><div className="mb-8 flex flex-col justify-between gap-5 lg:flex-row lg:items-end"><div><p className="text-sm font-semibold uppercase tracking-[.24em] text-fuchsia-300">Projects</p><h2 className="mt-3 text-3xl font-black sm:text-5xl">Selected work</h2></div><div className="flex flex-wrap gap-3">{projectCategories.map((category) => <button key={category} onClick={() => setProjectFilter(category)} className={`rounded-full px-5 py-2.5 text-sm font-semibold transition ${projectFilter === category ? 'bg-cyan-300 text-ink shadow-glow' : 'border border-white/15 bg-white/10 text-slate-200 hover:border-cyan-300/50'}`}>{category}</button>)}</div></div><div className="grid gap-6">{filteredProjects.map((project) => <Tilt key={project.title} className="glass rounded-3xl p-6 sm:p-8"><div className="flex flex-col justify-between gap-5 md:flex-row md:items-start"><div className="lift-3d"><div className="flex flex-wrap gap-3"><span className="rounded-full bg-emerald-300/15 px-3 py-1 text-xs font-bold text-emerald-200">{project.status}</span><span className="rounded-full bg-fuchsia-300/15 px-3 py-1 text-xs font-bold text-fuchsia-200">{project.category}</span></div><h3 className="mt-5 text-2xl font-black">{project.title}</h3><p className="mt-4 max-w-4xl leading-8 text-slate-300">{project.description}</p><div className="mt-5 flex flex-wrap gap-3">{project.tech.map((tech) => <span key={tech} className="inline-flex items-center gap-2 rounded-2xl bg-white/10 px-3 py-2 text-sm"><SkillLogo name={tech} />{tech}</span>)}</div></div><div className="lift-3d flex shrink-0 gap-3"><a href={project.github} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-5 py-3 text-sm font-bold transition hover:border-cyan-300/60 hover:text-cyan-200"><GitHubIcon /> GitHub</a><button disabled className="cursor-not-allowed rounded-full border border-white/10 px-5 py-3 text-sm font-bold text-slate-500">Live Demo N/A</button></div></div></Tilt>)}</div></Reveal></section>
 
           <section id="education" className="px-4 py-20 sm:px-6 lg:px-8"><Reveal className="mx-auto max-w-7xl"><p className="text-sm font-semibold uppercase tracking-[.24em] text-cyan-300">Education</p><h2 className="mt-3 text-3xl font-black sm:text-5xl">Academic path</h2><div className="mt-10 grid gap-6 lg:grid-cols-2">{education.map((item) => <Tilt key={item.degree} className="glass rounded-3xl p-6 sm:p-8"><p className="lift-3d text-sm font-semibold text-cyan-200">{item.status}</p><h3 className="lift-3d mt-3 text-2xl font-black">{item.degree}</h3><p className="lift-3d mt-3 text-slate-300">{item.institute}</p><p className="lift-3d mt-2 text-slate-400">{item.location}</p><p className="lift-3d mt-5 inline-flex rounded-full bg-white/10 px-4 py-2 text-sm text-emerald-200">{item.description}</p></Tilt>)}</div></Reveal></section>
 
-          <section id="certifications" className="px-4 py-20 sm:px-6 lg:px-8"><Reveal className="mx-auto max-w-7xl"><p className="text-sm font-semibold uppercase tracking-[.24em] text-emerald-300">Certifications</p><h2 className="mt-3 text-3xl font-black sm:text-5xl">Verified learning</h2><div className="mt-10 grid gap-6">{certifications.map((certification) => <Tilt key={certification.name} className="glass rounded-3xl p-6 sm:p-8"><div className="lift-3d flex flex-col justify-between gap-6 md:flex-row md:items-start"><div><p className="text-sm font-semibold text-fuchsia-200">{certification.platform} - {certification.date}</p><h3 className="mt-3 text-2xl font-black">{certification.name}</h3><div className="mt-5 flex flex-wrap gap-3">{certification.skills.map((skill) => <span key={skill} className="inline-flex items-center gap-2 rounded-2xl bg-white/10 px-3 py-2 text-sm"><SkillLogo name={skill} />{skill}</span>)}</div></div><a href={certification.verification} target="_blank" rel="noreferrer" className="rounded-full bg-gradient-to-r from-emerald-300 to-cyan-300 px-5 py-3 text-sm font-bold text-ink transition hover:scale-105">Verify</a></div></Tilt>)}</div></Reveal></section>
+          <section id="certifications" className="px-4 py-20 sm:px-6 lg:px-8"><Reveal className="mx-auto max-w-7xl"><p className="text-sm font-semibold uppercase tracking-[.24em] text-emerald-300">Certifications</p><h2 className="mt-3 text-3xl font-black sm:text-5xl">Verified learning</h2><div className="mt-10 grid gap-6">{activeCertifications.map((certification) => <Tilt key={certification.name} className="glass rounded-3xl p-6 sm:p-8"><div className="lift-3d flex flex-col justify-between gap-6 md:flex-row md:items-start"><div><p className="text-sm font-semibold text-fuchsia-200">{certification.platform} - {certification.date}</p><h3 className="mt-3 text-2xl font-black">{certification.name}</h3><div className="mt-5 flex flex-wrap gap-3">{certification.skills.map((skill) => <span key={skill} className="inline-flex items-center gap-2 rounded-2xl bg-white/10 px-3 py-2 text-sm"><SkillLogo name={skill} />{skill}</span>)}</div></div><a href={certification.verification} target="_blank" rel="noreferrer" className="rounded-full bg-gradient-to-r from-emerald-300 to-cyan-300 px-5 py-3 text-sm font-bold text-ink transition hover:scale-105">Verify</a></div></Tilt>)}</div></Reveal></section>
+
+          <section id="achievements" className="px-4 py-20 sm:px-6 lg:px-8"><Reveal className="mx-auto max-w-7xl"><p className="text-sm font-semibold uppercase tracking-[.24em] text-cyan-300">Achievements</p><h2 className="mt-3 text-3xl font-black sm:text-5xl">Highlights</h2><div className="mt-10 grid gap-6 md:grid-cols-2">{activeAchievements.map((achievement) => <Tilt key={achievement.title} className="glass rounded-3xl p-6 sm:p-8"><p className="lift-3d text-sm font-semibold text-fuchsia-200">{achievement.date}</p><h3 className="lift-3d mt-3 text-2xl font-black">{achievement.title}</h3><p className="lift-3d mt-4 leading-8 text-slate-300">{achievement.description}</p></Tilt>)}</div></Reveal></section>
 
           <section className="px-4 py-20 sm:px-6 lg:px-8"><Reveal className="mx-auto max-w-7xl"><Tilt className="relative overflow-hidden rounded-[2rem] border border-white/15 bg-gradient-to-br from-cyan-400/20 via-fuchsia-500/20 to-emerald-400/20 p-8 shadow-glow sm:p-12"><div className="absolute right-8 top-8 h-24 w-24 rounded-full bg-cyan-300/25 blur-2xl"></div><div className="lift-3d"><p className="text-sm font-semibold uppercase tracking-[.24em] text-cyan-200">Open for opportunities</p><h2 className="mt-4 max-w-3xl text-3xl font-black sm:text-5xl">Let's work together!</h2><p className="mt-5 max-w-2xl text-slate-300">Available for roles and collaborations where clean code, practical problem solving, and full stack delivery matter.</p><a href="#contact" className="mt-8 inline-flex rounded-full bg-white px-6 py-3 text-sm font-bold text-ink transition hover:scale-105 hover:bg-cyan-200">Start a conversation</a></div></Tilt></Reveal></section>
 
