@@ -296,6 +296,7 @@
 
     function AdminPanel({ data, onSave }) {
       const [open, setOpen] = useState(false);
+      const [enabled, setEnabled] = useState(false);
       const [loggedIn, setLoggedIn] = useState(sessionStorage.getItem('venkatashivam_admin') === 'true');
       const [password, setPassword] = useState('');
       const [message, setMessage] = useState('');
@@ -309,6 +310,17 @@
       });
 
       useEffect(() => {
+        const params = new URLSearchParams(window.location.search);
+        if (params.get('admin') === 'venkatashiva') {
+          localStorage.setItem('venkatashivam_admin_enabled', 'true');
+          setEnabled(true);
+          window.history.replaceState({}, document.title, window.location.pathname);
+          return;
+        }
+        setEnabled(localStorage.getItem('venkatashivam_admin_enabled') === 'true');
+      }, []);
+
+      useEffect(() => {
         setDraft({
           resumeUrl: data.resumeUrl,
           profilePicture: data.profilePicture,
@@ -318,6 +330,8 @@
           certifications: JSON.stringify(data.certifications, null, 2)
         });
       }, [data]);
+
+      if (!enabled) return null;
 
       const login = (event) => {
         event.preventDefault();
