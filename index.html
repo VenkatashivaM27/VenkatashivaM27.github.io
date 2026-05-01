@@ -1,0 +1,321 @@
+﻿<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Portfolio of Venkata Shiva M, Full Stack Developer skilled in Java, Spring Boot, React, and modern web technologies." />
+  <title>Venkata Shiva M | Full Stack Developer</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'] },
+          colors: { ink: '#050816' },
+          boxShadow: {
+            glow: '0 0 42px rgba(34, 211, 238, .32)',
+            pinkglow: '0 0 48px rgba(217, 70, 239, .28)'
+          }
+        }
+      }
+    };
+  </script>
+  <style>
+    html { scroll-behavior: smooth; }
+    body { background: #050816; cursor: none; }
+    a, button, input, textarea { cursor: none; }
+    @keyframes float { 0%,100% { transform: translateY(0) rotateX(0deg) rotateY(0deg); } 50% { transform: translateY(-16px) rotateX(2deg) rotateY(-3deg); } }
+    @keyframes glowPulse { 0%,100% { opacity:.55; transform:scale(1); } 50% { opacity:.95; transform:scale(1.04); } }
+    @keyframes spin3d { from { transform: rotateX(58deg) rotateZ(0deg); } to { transform: rotateX(58deg) rotateZ(360deg); } }
+    @keyframes orbit { from { transform: rotate(0deg) translateX(19px) rotate(0deg); } to { transform: rotate(360deg) translateX(19px) rotate(-360deg); } }
+    .glass { background: linear-gradient(135deg, rgba(255,255,255,.11), rgba(255,255,255,.045)); border: 1px solid rgba(255,255,255,.16); box-shadow: 0 24px 80px rgba(0,0,0,.36); backdrop-filter: blur(18px); }
+    .hero-grid { background-image: linear-gradient(rgba(255,255,255,.05) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.05) 1px, transparent 1px); background-size: 44px 44px; }
+    .reveal { opacity: 0; transform: translateY(34px); transition: opacity .75s ease, transform .75s ease; }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+    .tilt-card { transform-style: preserve-3d; transition: transform .18s ease, border-color .25s ease, box-shadow .25s ease; }
+    .tilt-card:hover { box-shadow: 0 28px 90px rgba(34,211,238,.18), 0 0 42px rgba(217,70,239,.18); }
+    .lift-3d { transform: translateZ(34px); }
+    .cursor-core { pointer-events:none; position:fixed; z-index:9999; width:18px; height:18px; margin:-9px 0 0 -9px; border-radius:999px; background: radial-gradient(circle, #fff 0 18%, #67e8f9 19% 55%, rgba(217,70,239,.2) 56%); box-shadow:0 0 22px rgba(34,211,238,.9), 0 0 44px rgba(217,70,239,.45); mix-blend-mode: screen; }
+    .cursor-ring { pointer-events:none; position:fixed; z-index:9998; width:56px; height:56px; margin:-28px 0 0 -28px; border:1px solid rgba(103,232,249,.55); border-radius:999px; transform-style:preserve-3d; animation: spin3d 1.9s linear infinite; box-shadow:0 0 28px rgba(34,211,238,.22); }
+    .cursor-ring:before, .cursor-ring:after { content:''; position:absolute; left:50%; top:50%; width:7px; height:7px; margin:-3.5px; border-radius:999px; background:#d946ef; box-shadow:0 0 18px rgba(217,70,239,.9); animation: orbit 1.25s linear infinite; }
+    .cursor-ring:after { background:#34d399; animation-duration:1.65s; animation-direction:reverse; }
+    .dev-bg { pointer-events:none; position:fixed; inset:0; z-index:0; overflow:hidden; perspective:1100px; background: radial-gradient(circle at var(--mx, 50%) var(--my, 40%), rgba(34,211,238,.2), transparent 26%), radial-gradient(circle at 80% 20%, rgba(217,70,239,.14), transparent 28%), linear-gradient(180deg, #050816 0%, #07111f 48%, #050816 100%); }
+    .dev-bg:before { content:''; position:absolute; inset:-20%; background-image: linear-gradient(rgba(34,211,238,.09) 1px, transparent 1px), linear-gradient(90deg, rgba(34,211,238,.09) 1px, transparent 1px); background-size:54px 54px; transform: rotateX(62deg) translate3d(calc(var(--px, 0) * -16px), calc(var(--py, 0) * -18px), -130px); transform-origin:center; animation: gridDrift 18s linear infinite; mask-image: linear-gradient(to bottom, transparent, #000 18%, #000 78%, transparent); }
+    .dev-bg:after { content:''; position:absolute; inset:0; background: repeating-linear-gradient(90deg, transparent 0 72px, rgba(34,211,238,.05) 73px 74px), repeating-linear-gradient(0deg, transparent 0 88px, rgba(217,70,239,.045) 89px 90px); transform: translate3d(calc(var(--px, 0) * 18px), calc(var(--py, 0) * 12px), 0); opacity:.65; }
+    .circuit-line { position:absolute; height:1px; background:linear-gradient(90deg, transparent, rgba(34,211,238,.72), rgba(52,211,153,.55), transparent); box-shadow:0 0 18px rgba(34,211,238,.45); animation: circuitFlow 5.5s ease-in-out infinite; transform:translate3d(calc(var(--px, 0) * var(--dx)), calc(var(--py, 0) * var(--dy)), 0) rotate(var(--rot)); }
+    .robot-core { position:absolute; right:7%; top:16%; width:190px; height:190px; border:1px solid rgba(103,232,249,.35); border-radius:38% 62% 45% 55%; background:radial-gradient(circle at 35% 30%, rgba(255,255,255,.22), transparent 18%), linear-gradient(135deg, rgba(34,211,238,.16), rgba(217,70,239,.08)); box-shadow: inset 0 0 28px rgba(34,211,238,.18), 0 0 70px rgba(34,211,238,.14); transform:translate3d(calc(var(--px, 0) * -42px), calc(var(--py, 0) * -32px), 80px) rotateX(calc(var(--py, 0) * 14deg)) rotateY(calc(var(--px, 0) * -18deg)); animation: roboFloat 6s ease-in-out infinite; }
+    .robot-eye { position:absolute; top:72px; width:22px; height:22px; border-radius:999px; background:#67e8f9; box-shadow:0 0 22px rgba(103,232,249,.9); }
+    .robot-eye.left { left:54px; } .robot-eye.right { right:54px; }
+    .robot-mouth { position:absolute; left:58px; right:58px; bottom:56px; height:6px; border-radius:999px; background:linear-gradient(90deg, #34d399, #67e8f9, #d946ef); box-shadow:0 0 18px rgba(103,232,249,.55); }
+    .code-panel { position:absolute; width:250px; border:1px solid rgba(255,255,255,.14); border-radius:18px; background:linear-gradient(135deg, rgba(15,23,42,.56), rgba(15,23,42,.22)); backdrop-filter:blur(14px); box-shadow:0 24px 70px rgba(0,0,0,.28), 0 0 28px rgba(34,211,238,.12); padding:16px; transform-style:preserve-3d; transform:translate3d(calc(var(--px, 0) * var(--dx)), calc(var(--py, 0) * var(--dy)), 70px) rotateX(calc(var(--py, 0) * 10deg)) rotateY(calc(var(--px, 0) * -14deg)) rotateZ(var(--rot)); animation: panelFloat 7s ease-in-out infinite; }
+    .code-panel span { display:block; height:8px; margin:10px 0; border-radius:999px; background:linear-gradient(90deg, rgba(103,232,249,.9), rgba(217,70,239,.36), transparent); }
+    .holo-cube { position:absolute; width:86px; height:86px; border:1px solid rgba(103,232,249,.35); transform-style:preserve-3d; transform:translate3d(calc(var(--px, 0) * var(--dx)), calc(var(--py, 0) * var(--dy)), 120px) rotateX(58deg) rotateY(0deg); animation:cubeSpin 9s linear infinite; box-shadow:0 0 34px rgba(34,211,238,.18); }
+    .holo-cube:before, .holo-cube:after { content:''; position:absolute; inset:0; border:1px solid rgba(217,70,239,.3); transform:rotateY(90deg); } .holo-cube:after { transform:rotateX(90deg); border-color:rgba(52,211,153,.32); }
+    main > nav, main > section, main > footer { position:relative; z-index:1; }
+    .light-mode { background:#f8fbff; color:#07111f; }
+    .light-mode .dev-bg { background: radial-gradient(circle at var(--mx, 50%) var(--my, 40%), rgba(14,165,233,.18), transparent 28%), radial-gradient(circle at 80% 20%, rgba(168,85,247,.12), transparent 28%), linear-gradient(180deg, #f8fbff 0%, #eef7ff 48%, #ffffff 100%); }
+    .light-mode .dev-bg:before { background-image: linear-gradient(rgba(14,165,233,.16) 1px, transparent 1px), linear-gradient(90deg, rgba(14,165,233,.16) 1px, transparent 1px); }
+    .light-mode .glass { background:linear-gradient(135deg, rgba(255,255,255,.82), rgba(255,255,255,.52)); border-color:rgba(14,165,233,.24); box-shadow:0 24px 70px rgba(15,23,42,.12), 0 0 26px rgba(14,165,233,.1); }
+    .light-mode .bg-ink, .light-mode .bg-ink\/75, .light-mode .bg-ink\/95 { background-color:rgba(248,251,255,.82) !important; }
+    .light-mode .text-white { color:#07111f !important; }
+    .light-mode .text-slate-200, .light-mode .text-slate-300 { color:#334155 !important; }
+    .light-mode .text-slate-400 { color:#64748b !important; }
+    .light-mode .border-white\/10, .light-mode .border-white\/15, .light-mode .border-white\/20 { border-color:rgba(15,23,42,.12) !important; }
+    .light-mode .bg-white\/10 { background-color:rgba(255,255,255,.58) !important; }
+    .light-mode input, .light-mode textarea { color:#07111f !important; background:rgba(255,255,255,.72) !important; }
+    .theme-toggle { position:relative; width:68px; height:38px; border-radius:999px; border:1px solid rgba(255,255,255,.18); background:linear-gradient(135deg, rgba(255,255,255,.16), rgba(255,255,255,.06)); box-shadow:0 0 24px rgba(34,211,238,.18); }
+    .theme-toggle span { position:absolute; top:4px; left:4px; display:grid; place-items:center; width:28px; height:28px; border-radius:999px; background:#67e8f9; color:#050816; transition:transform .25s ease, background .25s ease; }
+    .light-mode .theme-toggle { border-color:rgba(15,23,42,.14); background:rgba(255,255,255,.72); }
+    .light-mode .theme-toggle span { transform:translateX(30px); background:#f59e0b; }
+    @keyframes gridDrift { from { background-position:0 0; } to { background-position:0 108px; } }
+    @keyframes circuitFlow { 0%,100% { opacity:.25; filter:hue-rotate(0deg); } 50% { opacity:1; filter:hue-rotate(80deg); } }
+    @keyframes roboFloat { 0%,100% { border-radius:38% 62% 45% 55%; } 50% { border-radius:55% 45% 58% 42%; } }
+    @keyframes panelFloat { 0%,100% { margin-top:0; } 50% { margin-top:-22px; } }
+    @keyframes cubeSpin { from { rotate:0 1 1 0deg; } to { rotate:0 1 1 360deg; } }
+    @media (pointer: coarse) { body, a, button, input, textarea { cursor: auto; } .cursor-core, .cursor-ring { display:none; } }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script type="text/babel" data-presets="env,react,typescript">
+    const { useEffect, useMemo, useRef, useState } = React;
+
+    const resumeUrl = 'https://drive.google.com/file/d/1EDuxHBcz8WwaE-lCXEJfTrZc0AbUD0g_/view?usp=drivesdk';
+    const navLinks = ['About', 'Skills', 'Projects', 'Education', 'Certifications', 'Contact'];
+    const typingRoles = ['Full Stack Developer', 'Java Developer', 'Backend Developer', 'Web Developer'];
+
+    const iconMap = {
+      HTML: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/html5/html5-original.svg',
+      CSS: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/css3/css3-original.svg',
+      JavaScript: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg',
+      React: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg',
+      Java: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/java/java-original.svg',
+      'Spring Boot': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/spring/spring-original.svg',
+      Python: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg',
+      MySQL: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mysql/mysql-original.svg',
+      MongoDB: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mongodb/mongodb-original.svg',
+      GitHub: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/github/github-original.svg',
+      'VS Code': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/vscode/vscode-original.svg',
+      ChatGPT: 'https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/openai.svg',
+      'GitHub Copilot': 'https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/githubcopilot.svg',
+      'REST APIs': 'https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/fastapi.svg',
+      Streamlit: 'https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/streamlit.svg'
+    };
+
+    const skills = {
+      Frontend: ['HTML', 'CSS', 'JavaScript', 'React'],
+      Backend: ['Java', 'Spring Boot', 'REST APIs', 'Python'],
+      Databases: ['MySQL', 'MongoDB'],
+      Tools: ['GitHub', 'VS Code'],
+      'AI Tools': ['ChatGPT', 'GitHub Copilot']
+    };
+
+    const projects = [
+      {
+        title: 'BMI Calculator Web App',
+        status: 'Completed',
+        category: 'Web App',
+        description: 'Developed a web-based BMI calculator that takes user input for height and weight, then provides accurate health category classification with validation-focused usability.',
+        tech: ['Python', 'Streamlit'],
+        github: 'https://github.com/VenkatashivaM27/oasis-intern-BMI-Calculator'
+      }
+    ];
+
+    const education = [
+      { degree: 'Master of Computer Applications (MCA)', institute: 'Krupanidhi College of Management', location: 'Bengaluru, India', status: 'Expected 2026', description: '8.4 GPA' },
+      { degree: 'Bachelor of Computer Applications (BCA)', institute: 'Krupanidhi Degree College', location: 'Bengaluru, India', status: 'Graduated 2024', description: '8.7 GPA' }
+    ];
+
+    const certifications = [
+      {
+        name: 'Python Programming Internship Certificate',
+        platform: 'Oasis Infobyte',
+        date: 'Sep 2025',
+        skills: ['Python', 'Problem Solving', 'Application Development'],
+        verification: 'https://www.linkedin.com/posts/venkatashiva%7Em_python-aicte-oasisinfobyte-activity-7377018971994251265-snJl?utm_source=share&utm_medium=member_desktop&rcm=ACoAAEjGFWEBZHFjk9c_3usb_qoKfvG2rL6tAv4'
+      }
+    ];
+
+    function MailIcon() { return <svg viewBox="0 0 24 24" fill="none" className="h-5 w-5"><path d="M4 6h16v12H4V6Z" stroke="currentColor" strokeWidth="1.8"/><path d="m4 7 8 6 8-6" stroke="currentColor" strokeWidth="1.8"/></svg>; }
+    function LinkedInIcon() { return <svg viewBox="0 0 24 24" fill="currentColor" className="h-5 w-5"><path d="M6.94 8.9H3.75v10.36h3.19V8.9ZM5.35 4.74a1.85 1.85 0 1 0 0 3.7 1.85 1.85 0 0 0 0-3.7Zm14.9 8.55c0-2.78-1.49-4.07-3.48-4.07a3 3 0 0 0-2.72 1.5V8.9h-3.06v10.36h3.18v-5.13c0-1.35.26-2.65 1.92-2.65 1.64 0 1.66 1.53 1.66 2.74v5.04h3.19v-5.97h-.69Z"/></svg>; }
+    function GitHubIcon() { return <svg viewBox="0 0 24 24" fill="currentColor" className="h-5 w-5"><path d="M12 .9a11.1 11.1 0 0 0-3.51 21.63c.56.1.76-.24.76-.54v-1.9c-3.1.68-3.76-1.33-3.76-1.33-.5-1.29-1.24-1.63-1.24-1.63-1.02-.7.08-.68.08-.68 1.12.08 1.71 1.15 1.71 1.15 1 .1.2 2.63 1.23 3.19 1.87.53 2.54-.39 2.54-.39.1-.72.39-1.21.71-1.49-2.48-.28-5.09-1.24-5.09-5.52 0-1.22.44-2.22 1.15-3-.12-.28-.5-1.42.11-2.96 0 0 .94-.3 3.06 1.15a10.6 10.6 0 0 1 5.58 0c2.12-1.45 3.05-1.15 3.05-1.15.62 1.54.23 2.68.12 2.96.72.78 1.15 1.78 1.15 3 0 4.29-2.62 5.23-5.11 5.51.4.35.76 1.03.76 2.08v3.08c0 .3.2.65.77.54A11.1 11.1 0 0 0 12 .9Z"/></svg>; }
+
+    function useTyping(words) {
+      const [wordIndex, setWordIndex] = useState(0);
+      const [text, setText] = useState('');
+      const [deleting, setDeleting] = useState(false);
+      useEffect(() => {
+        const current = words[wordIndex];
+        const timer = setTimeout(() => {
+          if (!deleting && text === current) { setTimeout(() => setDeleting(true), 900); return; }
+          if (deleting && text === '') { setDeleting(false); setWordIndex((index) => (index + 1) % words.length); return; }
+          setText((value) => deleting ? current.slice(0, value.length - 1) : current.slice(0, value.length + 1));
+        }, deleting ? 45 : 85);
+        return () => clearTimeout(timer);
+      }, [deleting, text, wordIndex]);
+      return text;
+    }
+
+    function Reveal({ children, className = '' }) {
+      const ref = useRef(null);
+      useEffect(() => {
+        const observer = new IntersectionObserver(([entry]) => { if (entry.isIntersecting) entry.target.classList.add('visible'); }, { threshold: .16 });
+        if (ref.current) observer.observe(ref.current);
+        return () => observer.disconnect();
+      }, []);
+      return <div ref={ref} className={`reveal ${className}`}>{children}</div>;
+    }
+
+    function Cursor3D() {
+      const core = useRef(null);
+      const ring = useRef(null);
+      useEffect(() => {
+        let x = window.innerWidth / 2, y = window.innerHeight / 2, rx = x, ry = y;
+        const move = (event) => { x = event.clientX; y = event.clientY; if (core.current) core.current.style.transform = `translate3d(${x}px, ${y}px, 0)`; };
+        const animate = () => { rx += (x - rx) * .16; ry += (y - ry) * .16; if (ring.current) ring.current.style.transform = `translate3d(${rx}px, ${ry}px, 0) rotateX(58deg)`; requestAnimationFrame(animate); };
+        window.addEventListener('mousemove', move);
+        animate();
+        return () => window.removeEventListener('mousemove', move);
+      }, []);
+      return <><div ref={ring} className="cursor-ring"></div><div ref={core} className="cursor-core"></div></>;
+    }
+
+    function Tilt({ children, className = '' }) {
+      const ref = useRef(null);
+      const onMove = (event) => {
+        const element = ref.current;
+        if (!element) return;
+        const rect = element.getBoundingClientRect();
+        const x = event.clientX - rect.left;
+        const y = event.clientY - rect.top;
+        const rotateY = ((x / rect.width) - .5) * 12;
+        const rotateX = -((y / rect.height) - .5) * 12;
+        element.style.transform = `perspective(900px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-8px)`;
+      };
+      const onLeave = () => { if (ref.current) ref.current.style.transform = 'perspective(900px) rotateX(0deg) rotateY(0deg) translateY(0px)'; };
+      return <div ref={ref} onMouseMove={onMove} onMouseLeave={onLeave} className={`tilt-card ${className}`}>{children}</div>;
+    }
+
+    function SkillLogo({ name }) {
+      const src = iconMap[name];
+      if (!src) return <span className="grid h-9 w-9 place-items-center rounded-xl bg-gradient-to-br from-cyan-300/30 to-fuchsia-400/30 text-xs font-black text-cyan-100">{name.slice(0,2).toUpperCase()}</span>;
+      return <span className="grid h-10 w-10 place-items-center rounded-xl border border-white/10 bg-white p-1.5 shadow-glow"><img src={src} alt={`${name} logo`} className="h-full w-full object-contain" /></span>;
+    }
+
+    function Developer3DBackground() {
+      const ref = useRef(null);
+      useEffect(() => {
+        const element = ref.current;
+        if (!element) return;
+        const move = (event) => {
+          const px = (event.clientX / window.innerWidth) - .5;
+          const py = (event.clientY / window.innerHeight) - .5;
+          element.style.setProperty('--px', px.toFixed(4));
+          element.style.setProperty('--py', py.toFixed(4));
+          element.style.setProperty('--mx', `${event.clientX}px`);
+          element.style.setProperty('--my', `${event.clientY}px`);
+        };
+        const scroll = () => element.style.setProperty('--scroll', `${window.scrollY * .04}px`);
+        window.addEventListener('mousemove', move);
+        window.addEventListener('scroll', scroll, { passive: true });
+        scroll();
+        return () => {
+          window.removeEventListener('mousemove', move);
+          window.removeEventListener('scroll', scroll);
+        };
+      }, []);
+
+      return (
+        <div ref={ref} className="dev-bg" aria-hidden="true">
+          <div className="robot-core">
+            <span className="robot-eye left"></span>
+            <span className="robot-eye right"></span>
+            <span className="robot-mouth"></span>
+          </div>
+          <div className="code-panel" style={{ left: '6%', top: '18%', '--dx': '46px', '--dy': '-32px', '--rot': '-8deg' }}>
+            <span style={{ width: '72%' }}></span><span style={{ width: '48%' }}></span><span style={{ width: '84%' }}></span><span style={{ width: '58%' }}></span>
+          </div>
+          <div className="code-panel" style={{ right: '10%', bottom: '13%', '--dx': '-38px', '--dy': '42px', '--rot': '7deg', animationDelay: '-2s' }}>
+            <span style={{ width: '66%' }}></span><span style={{ width: '91%' }}></span><span style={{ width: '44%' }}></span><span style={{ width: '76%' }}></span>
+          </div>
+          <div className="holo-cube" style={{ left: '13%', bottom: '20%', '--dx': '32px', '--dy': '48px' }}></div>
+          <div className="holo-cube" style={{ right: '28%', top: '31%', width: '58px', height: '58px', '--dx': '-52px', '--dy': '-24px', animationDuration: '6s' }}></div>
+          <span className="circuit-line" style={{ left: '8%', top: '42%', width: '42vw', '--dx': '30px', '--dy': '-16px', '--rot': '0deg' }}></span>
+          <span className="circuit-line" style={{ right: '3%', top: '62%', width: '34vw', '--dx': '-44px', '--dy': '20px', '--rot': '10deg', animationDelay: '-1.5s' }}></span>
+          <span className="circuit-line" style={{ left: '34%', top: '78%', width: '31vw', '--dx': '22px', '--dy': '38px', '--rot': '-14deg', animationDelay: '-3s' }}></span>
+        </div>
+      );
+    }
+
+    function App() {
+      const typedText = useTyping(typingRoles);
+      const [menuOpen, setMenuOpen] = useState(false);
+      const [projectFilter, setProjectFilter] = useState('All');
+      const [sent, setSent] = useState(false);
+      const [lightMode, setLightMode] = useState(false);
+      const projectCategories = useMemo(() => ['All', ...new Set(projects.map((project) => project.category))], []);
+      const filteredProjects = projects.filter((project) => projectFilter === 'All' || project.category === projectFilter);
+
+      const handleContact = (event) => {
+        event.preventDefault();
+        const form = new FormData(event.currentTarget);
+        const name = String(form.get('name') || '');
+        const email = String(form.get('email') || '');
+        const message = String(form.get('message') || '');
+        window.location.href = `mailto:venkatashivam.26.career@gmail.com?subject=${encodeURIComponent(`Portfolio inquiry from ${name}`)}&body=${encodeURIComponent(`${message}\n\nFrom: ${name}\nEmail: ${email}`)}`;
+        setSent(true);
+        event.currentTarget.reset();
+      };
+
+      return (
+        <main id="top" className={`min-h-screen bg-ink text-white selection:bg-cyan-400/30 ${lightMode ? 'light-mode' : ''}`}>
+          <Developer3DBackground />
+          <Cursor3D />
+          <nav className="fixed left-0 right-0 top-0 z-50 border-b border-white/10 bg-ink/75 backdrop-blur-2xl">
+            <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6 lg:px-8">
+              <a href="#top" aria-label="TAP Academy home" className="group inline-flex items-center"><img src="https://tapportfolio.lovable.app/assets/logo-CxDGoOCE.png" alt="TAP Academy" className="h-10 w-auto transition duration-300 group-hover:drop-shadow-[0_0_18px_rgba(34,211,238,.65)]" /></a>
+              <div className="hidden items-center gap-7 lg:flex">{navLinks.map((link) => <a key={link} href={`#${link.toLowerCase()}`} className="text-sm text-slate-300 transition hover:text-cyan-300">{link}</a>)}</div>
+              <div className="hidden items-center gap-3 lg:flex">
+                <button type="button" onClick={() => setLightMode((value) => !value)} className="theme-toggle" aria-label="Toggle light and dark mode" title={lightMode ? 'Switch to dark mode' : 'Switch to light mode'}><span>{lightMode ? '☀' : '☾'}</span></button>
+                <a href={resumeUrl} target="_blank" rel="noreferrer" className="rounded-full bg-gradient-to-r from-cyan-400 to-fuchsia-500 px-5 py-2.5 text-sm font-semibold text-ink shadow-glow transition hover:scale-105 hover:shadow-pinkglow">Download Resume</a>
+              </div>
+              <button type="button" onClick={() => setMenuOpen((value) => !value)} className="glass inline-flex h-10 w-10 items-center justify-center rounded-full lg:hidden" aria-label="Toggle menu"><span className="text-xl">{menuOpen ? 'x' : '☰'}</span></button>
+            </div>
+            {menuOpen && <div className="border-t border-white/10 bg-ink/95 px-4 py-5 lg:hidden"><div className="mx-auto flex max-w-7xl flex-col gap-4">{navLinks.map((link) => <a key={link} href={`#${link.toLowerCase()}`} onClick={() => setMenuOpen(false)} className="text-sm text-slate-200">{link}</a>)}<button type="button" onClick={() => setLightMode((value) => !value)} className="theme-toggle" aria-label="Toggle light and dark mode"><span>{lightMode ? '☀' : '☾'}</span></button><a href={resumeUrl} target="_blank" rel="noreferrer" className="rounded-full bg-gradient-to-r from-cyan-400 to-fuchsia-500 px-5 py-3 text-center text-sm font-semibold text-ink">Download Resume</a></div></div>}
+          </nav>
+
+          <section className="hero-grid relative isolate overflow-hidden px-4 pb-24 pt-32 sm:px-6 lg:px-8 lg:pt-40">
+            <div className="absolute left-[-120px] top-20 h-72 w-72 rounded-full bg-cyan-500/30 blur-3xl"></div><div className="absolute bottom-20 right-[-100px] h-80 w-80 rounded-full bg-fuchsia-500/25 blur-3xl"></div><div className="absolute left-1/2 top-1/3 h-52 w-52 rounded-full bg-emerald-400/15 blur-3xl"></div>
+            <div className="relative mx-auto grid max-w-7xl items-center gap-12 lg:grid-cols-[1.08fr_.92fr]">
+              <Reveal><div className="max-w-3xl"><div className="mb-5 inline-flex rounded-full border border-cyan-300/30 bg-cyan-300/10 px-4 py-2 text-sm text-cyan-200 shadow-glow">Open for opportunities · Full Stack Development</div><h1 className="text-4xl font-black tracking-normal text-white sm:text-6xl lg:text-7xl">Venkata Shiva M</h1><div className="mt-5 min-h-12 text-2xl font-semibold text-slate-200 sm:text-3xl"><span className="bg-gradient-to-r from-cyan-300 via-emerald-300 to-fuchsia-300 bg-clip-text text-transparent">{typedText}</span><span className="ml-1 animate-pulse text-cyan-300">|</span></div><p className="mt-6 max-w-2xl text-lg leading-8 text-slate-300">Turning ideas into real-world web solutions with Java, Spring Boot, React, and clean product-minded engineering.</p><div className="mt-8 flex flex-wrap gap-4"><a href="#projects" className="rounded-full bg-white px-6 py-3 text-sm font-bold text-ink transition hover:scale-105 hover:bg-cyan-200">View Projects</a><a href="#contact" className="rounded-full border border-white/20 bg-white/10 px-6 py-3 text-sm font-bold text-white backdrop-blur transition hover:scale-105 hover:border-cyan-300/60 hover:text-cyan-200">Contact Me</a></div><div className="mt-9 grid max-w-xl grid-cols-1 gap-3 text-sm text-slate-300 sm:grid-cols-3">{['Bangaluru, India', 'Experience: N/A', 'Full Stack Developer'].map((item) => <Tilt key={item} className="glass rounded-2xl px-4 py-3">{item}</Tilt>)}</div></div></Reveal>
+              <Reveal className="flex justify-center lg:justify-end"><div className="relative"><div className="absolute inset-0 rounded-[2.5rem] bg-gradient-to-br from-cyan-400 via-emerald-300 to-fuchsia-500 blur-2xl" style={{ animation: 'glowPulse 4s ease-in-out infinite' }}></div><Tilt className="glass relative rounded-[2.5rem] p-4" style={{ animation: 'float 6s ease-in-out infinite' }}><div className="lift-3d relative overflow-hidden rounded-[2rem]"><img src="https://www.image2url.com/r2/default/images/1777573685397-89c67374-55e9-453d-8b49-6a34a6cc2e5a.jpeg" alt="Venkata Shiva M profile picture" className="h-[360px] w-[300px] rounded-[2rem] object-cover sm:h-[460px] sm:w-[380px]" /><div className="absolute inset-0 rounded-[2rem] bg-gradient-to-tr from-cyan-300/20 via-transparent to-fuchsia-400/20"></div></div></Tilt></div></Reveal>
+            </div>
+          </section>
+
+          <section id="about" className="px-4 py-20 sm:px-6 lg:px-8"><Reveal className="mx-auto max-w-7xl"><div className="grid gap-8 lg:grid-cols-[.85fr_1.15fr]"><div><p className="text-sm font-semibold uppercase tracking-[.24em] text-cyan-300">About</p><h2 className="mt-3 text-3xl font-black sm:text-5xl">Clean, scalable applications with purpose.</h2></div><Tilt className="glass rounded-3xl p-6 text-slate-300 sm:p-8"><p className="text-lg leading-8">Full Stack Developer skilled in Java, Spring Boot, and modern web technologies. I build clean, scalable applications and enjoy turning ideas into real-world solutions.</p><p className="mt-5 leading-8">I am a Full Stack Developer who focuses on building clean, scalable, and user-focused web applications. My core strength lies in Java and Spring Boot for backend development, combined with modern frontend technologies to create complete, end-to-end solutions.</p><p className="mt-5 leading-8">I have developed real-world projects like web applications and interactive tools, where I focused not just on functionality, but also on usability and performance. Through my internships in Python and web development, I gained hands-on experience working with real development workflows.</p><p className="mt-5 leading-8">Right now, I am looking for opportunities where I can contribute, grow, and build impactful products as a Full Stack Developer.</p></Tilt></div></Reveal></section>
+
+          <section id="skills" className="px-4 py-20 sm:px-6 lg:px-8"><Reveal className="mx-auto max-w-7xl"><div className="mb-10 flex flex-col justify-between gap-4 sm:flex-row sm:items-end"><div><p className="text-sm font-semibold uppercase tracking-[.24em] text-emerald-300">Skills</p><h2 className="mt-3 text-3xl font-black sm:text-5xl">Technical toolkit</h2></div><p className="max-w-xl text-slate-300">A practical stack for building complete web products, from REST APIs to responsive interfaces.</p></div><div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">{Object.entries(skills).map(([group, items]) => <Tilt key={group} className="glass rounded-3xl p-6"><h3 className="lift-3d text-xl font-bold">{group}</h3><div className="mt-5 flex flex-wrap gap-3">{items.map((skill) => <span key={skill} className="lift-3d inline-flex items-center gap-2 rounded-2xl border border-white/10 bg-white/10 px-3 py-2 text-sm text-slate-200 transition hover:border-cyan-300/60 hover:bg-cyan-300/10 hover:text-cyan-100"><SkillLogo name={skill} />{skill}</span>)}</div></Tilt>)}</div></Reveal></section>
+
+          <section id="projects" className="px-4 py-20 sm:px-6 lg:px-8"><Reveal className="mx-auto max-w-7xl"><div className="mb-8 flex flex-col justify-between gap-5 lg:flex-row lg:items-end"><div><p className="text-sm font-semibold uppercase tracking-[.24em] text-fuchsia-300">Projects</p><h2 className="mt-3 text-3xl font-black sm:text-5xl">Selected work</h2></div><div className="flex flex-wrap gap-3">{projectCategories.map((category) => <button key={category} onClick={() => setProjectFilter(category)} className={`rounded-full px-5 py-2.5 text-sm font-semibold transition ${projectFilter === category ? 'bg-cyan-300 text-ink shadow-glow' : 'border border-white/15 bg-white/10 text-slate-200 hover:border-cyan-300/50'}`}>{category}</button>)}</div></div><div className="grid gap-6">{filteredProjects.map((project) => <Tilt key={project.title} className="glass rounded-3xl p-6 sm:p-8"><div className="flex flex-col justify-between gap-5 md:flex-row md:items-start"><div className="lift-3d"><div className="flex flex-wrap gap-3"><span className="rounded-full bg-emerald-300/15 px-3 py-1 text-xs font-bold text-emerald-200">{project.status}</span><span className="rounded-full bg-fuchsia-300/15 px-3 py-1 text-xs font-bold text-fuchsia-200">{project.category}</span></div><h3 className="mt-5 text-2xl font-black">{project.title}</h3><p className="mt-4 max-w-4xl leading-8 text-slate-300">{project.description}</p><div className="mt-5 flex flex-wrap gap-3">{project.tech.map((tech) => <span key={tech} className="inline-flex items-center gap-2 rounded-2xl bg-white/10 px-3 py-2 text-sm"><SkillLogo name={tech} />{tech}</span>)}</div></div><div className="lift-3d flex shrink-0 gap-3"><a href={project.github} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-5 py-3 text-sm font-bold transition hover:border-cyan-300/60 hover:text-cyan-200"><GitHubIcon /> GitHub</a><button disabled className="cursor-not-allowed rounded-full border border-white/10 px-5 py-3 text-sm font-bold text-slate-500">Live Demo N/A</button></div></div></Tilt>)}</div></Reveal></section>
+
+          <section id="education" className="px-4 py-20 sm:px-6 lg:px-8"><Reveal className="mx-auto max-w-7xl"><p className="text-sm font-semibold uppercase tracking-[.24em] text-cyan-300">Education</p><h2 className="mt-3 text-3xl font-black sm:text-5xl">Academic path</h2><div className="mt-10 grid gap-6 lg:grid-cols-2">{education.map((item) => <Tilt key={item.degree} className="glass rounded-3xl p-6 sm:p-8"><p className="lift-3d text-sm font-semibold text-cyan-200">{item.status}</p><h3 className="lift-3d mt-3 text-2xl font-black">{item.degree}</h3><p className="lift-3d mt-3 text-slate-300">{item.institute}</p><p className="lift-3d mt-2 text-slate-400">{item.location}</p><p className="lift-3d mt-5 inline-flex rounded-full bg-white/10 px-4 py-2 text-sm text-emerald-200">{item.description}</p></Tilt>)}</div></Reveal></section>
+
+          <section id="certifications" className="px-4 py-20 sm:px-6 lg:px-8"><Reveal className="mx-auto max-w-7xl"><p className="text-sm font-semibold uppercase tracking-[.24em] text-emerald-300">Certifications</p><h2 className="mt-3 text-3xl font-black sm:text-5xl">Verified learning</h2><div className="mt-10 grid gap-6">{certifications.map((certification) => <Tilt key={certification.name} className="glass rounded-3xl p-6 sm:p-8"><div className="lift-3d flex flex-col justify-between gap-6 md:flex-row md:items-start"><div><p className="text-sm font-semibold text-fuchsia-200">{certification.platform} - {certification.date}</p><h3 className="mt-3 text-2xl font-black">{certification.name}</h3><div className="mt-5 flex flex-wrap gap-3">{certification.skills.map((skill) => <span key={skill} className="inline-flex items-center gap-2 rounded-2xl bg-white/10 px-3 py-2 text-sm"><SkillLogo name={skill} />{skill}</span>)}</div></div><a href={certification.verification} target="_blank" rel="noreferrer" className="rounded-full bg-gradient-to-r from-emerald-300 to-cyan-300 px-5 py-3 text-sm font-bold text-ink transition hover:scale-105">Verify</a></div></Tilt>)}</div></Reveal></section>
+
+          <section className="px-4 py-20 sm:px-6 lg:px-8"><Reveal className="mx-auto max-w-7xl"><Tilt className="relative overflow-hidden rounded-[2rem] border border-white/15 bg-gradient-to-br from-cyan-400/20 via-fuchsia-500/20 to-emerald-400/20 p-8 shadow-glow sm:p-12"><div className="absolute right-8 top-8 h-24 w-24 rounded-full bg-cyan-300/25 blur-2xl"></div><div className="lift-3d"><p className="text-sm font-semibold uppercase tracking-[.24em] text-cyan-200">Open for opportunities</p><h2 className="mt-4 max-w-3xl text-3xl font-black sm:text-5xl">Let's work together!</h2><p className="mt-5 max-w-2xl text-slate-300">Available for roles and collaborations where clean code, practical problem solving, and full stack delivery matter.</p><a href="#contact" className="mt-8 inline-flex rounded-full bg-white px-6 py-3 text-sm font-bold text-ink transition hover:scale-105 hover:bg-cyan-200">Start a conversation</a></div></Tilt></Reveal></section>
+
+          <section id="contact" className="px-4 py-20 sm:px-6 lg:px-8"><Reveal className="mx-auto grid max-w-7xl gap-8 lg:grid-cols-[.85fr_1.15fr]"><div><p className="text-sm font-semibold uppercase tracking-[.24em] text-fuchsia-300">Contact</p><h2 className="mt-3 text-3xl font-black sm:text-5xl">Let's build something useful.</h2><div className="mt-8 space-y-4 text-slate-300"><a href="mailto:venkatashivam.26.career@gmail.com" className="inline-flex items-center gap-3 transition hover:text-cyan-200"><span className="grid h-10 w-10 place-items-center rounded-2xl bg-cyan-300/15 text-cyan-200"><MailIcon /></span>venkatashivam.26.career@gmail.com</a><p>Bangaluru, India</p><div className="flex flex-wrap gap-3 pt-3"><a href="https://www.linkedin.com/in/venkatashiva~m" target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-5 py-2.5 text-sm font-semibold transition hover:border-cyan-300/60 hover:text-cyan-200"><LinkedInIcon /> LinkedIn</a><a href="https://github.com/VenkatashivaM27" target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-5 py-2.5 text-sm font-semibold transition hover:border-cyan-300/60 hover:text-cyan-200"><GitHubIcon /> GitHub</a></div></div></div><Tilt className="glass rounded-3xl p-6 sm:p-8"><form onSubmit={handleContact} className="lift-3d"><div className="grid gap-5 sm:grid-cols-2"><label className="block"><span className="text-sm font-semibold text-slate-200">Name</span><input name="name" required className="mt-2 w-full rounded-2xl border border-white/10 bg-white/10 px-4 py-3 text-white outline-none transition placeholder:text-slate-500 focus:border-cyan-300/70" placeholder="Your name" /></label><label className="block"><span className="text-sm font-semibold text-slate-200">Email</span><input name="email" type="email" required className="mt-2 w-full rounded-2xl border border-white/10 bg-white/10 px-4 py-3 text-white outline-none transition placeholder:text-slate-500 focus:border-cyan-300/70" placeholder="you@example.com" /></label></div><label className="mt-5 block"><span className="text-sm font-semibold text-slate-200">Message</span><textarea name="message" required rows="6" className="mt-2 w-full resize-none rounded-2xl border border-white/10 bg-white/10 px-4 py-3 text-white outline-none transition placeholder:text-slate-500 focus:border-cyan-300/70" placeholder="Tell me about the role, project, or idea."></textarea></label><button type="submit" className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-full bg-gradient-to-r from-cyan-300 via-emerald-300 to-fuchsia-400 px-6 py-3 font-black text-ink shadow-glow transition hover:scale-[1.02]"><MailIcon /> Send Message</button>{sent && <p className="mt-4 text-center text-sm text-emerald-200">Your email app is opening with the message ready.</p>}</form></Tilt></Reveal></section>
+
+          <footer className="border-t border-white/10 px-4 py-8 sm:px-6 lg:px-8"><div className="mx-auto flex max-w-7xl flex-col justify-between gap-4 text-sm text-slate-400 sm:flex-row sm:items-center"><p>© 2026 Venkata Shiva M. All rights reserved.</p><a href="#top" className="transition hover:text-cyan-200">Back to top</a></div></footer>
+        </main>
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+  </script>
+</body>
+</html>
